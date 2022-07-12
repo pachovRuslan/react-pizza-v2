@@ -5,11 +5,16 @@ import Header from './components/Header';
 import Home from './Pages/Home';
 import Cart from './Pages/Cart';
 import NotFound from './Pages/NotFound';
+// import {store} from './redux/store';
+
+
+
 
 export const SearchContext = React.createContext('');
 
 function App() {
   const [searchValue, setSearchValue] = React.useState('');
+
 
   return (
     <div className="wrapper">
