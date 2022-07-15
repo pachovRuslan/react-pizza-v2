@@ -1,35 +1,46 @@
-import {
-    createSlice
-} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    totalPrica: 0,
-    items: []
+  totalPrica: 0,
+  items: [],
 };
 
 const cartSlice = createSlice({
-    name: 'cart',
-    initialState,
-    reducers: {
-        addItem(state, action) {
-            state.items.push(action.payload);
-            state.totalPrica = state.items.reduce((sum, obj)=> {
-                return obj.price + sum;
-            }, 0)
-        },
-        removeItem(state, action) {
-            state.items = state.items.filter(obj => obj.id !== action.payload);
-        },
-        clearItem(state) {
-            state.items = [];
-        },
+  name: 'cart',
+  initialState,
+  reducers: {
+    addItem(state, action) {
+      const findItem = state.items.find((obj) => obj.id === action.payload.id);
+
+      if (findItem) {
+        findItem.count++;
+      } else {
+        state.items.push({
+          ...action.payload,
+          count: 1,
+        });
+      }
+      state.totalPrica = state.items.reduce((sum, obj) => {
+        return (obj.price * obj.count ) + sum;
+      }, 0);
     },
+    minusItem(state, action) {
+      const findItem = state.items.find((obj) => obj.id === action.payload);
+
+      if (findItem) {
+        findItem.count--;
+      }
+    },
+    removeItem(state, action) {
+      state.items = state.items.filter((obj) => obj.id !== action.payload);
+    },
+    clearItem(state) {
+      state.items = [];
+      state.totalPrica = 0
+    },
+  },
 });
 
-export const {
-    addItem,
-    removeItem,
-    clearItem
-} = cartSlice.actions;
+export const { addItem, removeItem, clearItem, minusItem } = cartSlice.actions;
 
 export default cartSlice.reducer;
