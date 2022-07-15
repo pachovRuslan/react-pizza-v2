@@ -1,14 +1,25 @@
-import React from 'react'
-
-function PizzaBlock({price, title, imageUrl,  types, sizes, rating,  category, id})
+import React from 'react';
+import { useDispatch ,useSelector } from 'react-redux';
+import { addItem } from '../../redux/Slices/cartSlice';
+function PizzaBlock({id, price, title, imageUrl,  types, sizes, rating,  category})
  {
+  const dispatch = useDispatch();
   const [pizzaCount, setPizzaCount] = React.useState(0);
   const [activeType, setActiveType] = React.useState(0);
   const [activeSize, setActiveSize] = React.useState(0);
+  const typeName = ['тонкое', 'традиционное'];
+
   const onClickAdd = () => {
-    setPizzaCount(pizzaCount +1)
+    const item = {
+      id, 
+      price, 
+      title, 
+      imageUrl,  
+      type: activeType, 
+      size: activeSize,  
+    };
+    dispatch(addItem(item))
   }
-  const typeName = ['тонкое', 'традиционное']
   
   return (
     <div className='pizza-block-wrapper'>
