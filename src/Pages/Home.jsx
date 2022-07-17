@@ -10,8 +10,8 @@ import Skeleton from '../components/PiazzaBlock/Skeleton';
 import Pagination from '../components/Pagination/Pagination';
 import { SearchContext } from '../App';
 import { setCategoryId, setCurrentPage, setFilters } from '../redux/Slices/filterSlice';
-import axios from 'axios';
- 
+import { fetchPizzas } from '../redux/Slices/PizzaSlice';
+
 function Home() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -19,10 +19,9 @@ function Home() {
   const isMounted = React.useRef(false);
 
   const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
+  const { items, status } = useSelector((state) => state.pizza);
 
   const { searchValue } = React.useContext(SearchContext);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [items, setItems] = React.useState([]);
 
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
@@ -30,22 +29,23 @@ function Home() {
   const onChangePage = (number) => {
     dispatch(setCurrentPage(number));
   };
-  const fetchPizzas = () => {
-    setIsLoading(true);
+  const getPizzas = async () => {
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
     const sortBy = sort.sortProperty.replace('-', '');
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    axios
-      .get(
-        `https://62c2a193876c4700f5296273.mockapi.io/items?page=${currentPage}&limit=8&${category}&sortBy=${sortBy}&order=${order}${search}`,
-      )
-      .then((res) => {
-        setItems(res.data);
-        setIsLoading(false);
-      });
+    dispatch(
+      fetchPizzas({
+        order,
+        sortBy,
+        category,
+        search,
+        currentPage,
+      }),
+    );
   };
+
   React.useEffect(() => {
     if (isMounted.current) {
       const queryString = qs.stringify({
@@ -75,12 +75,10 @@ function Home() {
   React.useEffect(() => {
     window.scrollTo(0, 0);
     if (!isSearch.current) {
-      fetchPizzas();
+      getPizzas();
     }
     isSearch.current = false;
   }, [categoryId, sort.sortProperty, searchValue, currentPage]);
-
-
 
   const skeletons = [...new Array(8)].map((_, index) => <Skeleton key={index} />);
   const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
@@ -92,7 +90,24 @@ function Home() {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">{isLoading ? skeletons : pizzas}</div>
+      {status === 'error' ? (
+        <div>
+          <h2>
+            Произошла ошибка <icon>😕</icon>
+          </h2>
+          <p>
+           Не удалось получить пиццы.
+            <br />
+            Попробуйте повторить попытку позже
+          </p>
+          <Link to="/" className="button button--black">
+            {' '}
+            <span>Вернуться назад</span>
+          </Link>
+        </div>
+      ) : (
+        <div className="content__items">{status === 'loading' ? skeletons : pizzas}</div>
+      )}
       <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );

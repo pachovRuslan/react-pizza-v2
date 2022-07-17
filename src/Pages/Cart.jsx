@@ -2,20 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import CartItem from '../components/CartItem';
-import { clearItem } from '../redux/Slices/cartSlice';
+import { clearItems, selectCart } from '../redux/Slices/cartSlice';
 import CartEmpty from '../components/CartEmpty';
 
 function Cart() {
-  const dispatch = useDispatch;
- const { totalPrica, items} = useSelector((state) => state.cart);
- const totalCount = items.reduce((sum, item) => sum + item.count, 0 );
- const onClickClear = () => {
-  if(window.confirm('очистить корзину?'))
-  dispatch(clearItem())
-};
-if(!totalPrica){
-  return <CartEmpty/>
-}
+  const dispatch = useDispatch();
+  const { totalPrica, items } = useSelector(selectCart);
+  const totalCount = items.reduce((sum, item) => sum + item.count, 0);
+  const onClickClear = () => {
+    if (window.confirm('очистить корзину?')) {
+      dispatch(clearItems());
+    }
+  };
+  if (!totalPrica) {
+    return <CartEmpty />;
+  }
   return (
     <div class="container container--cart">
       <div class="cart">
@@ -92,8 +93,9 @@ if(!totalPrica){
           </div>
         </div>
         <div class="content__items">
-          {items.map((item)=> ( <CartItem  key={item.id} {...item}/>))
-          }
+          {items.map((item) => (
+            <CartItem key={item.id} {...item} />
+          ))}
         </div>
         <div class="cart__bottom">
           <div class="cart__bottom-details">
@@ -106,31 +108,31 @@ if(!totalPrica){
               Сумма заказа: <b>{totalPrica} ₽</b>{' '}
             </span>
           </div>
-          <Link to='/'>
-          <div class="cart__bottom-buttons">
-            <a href="/" class="button button--outline button--add go-back-btn">
-              <svg
-                width="8"
-                height="14"
-                viewBox="0 0 8 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M7 13L1 6.93015L6.86175 1"
-                  stroke="#D3D3D3"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+          <Link to="/">
+            <div class="cart__bottom-buttons">
+              <a href="/" class="button button--outline button--add go-back-btn">
+                <svg
+                  width="8"
+                  height="14"
+                  viewBox="0 0 8 14"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M7 13L1 6.93015L6.86175 1"
+                    stroke="#D3D3D3"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
 
-              <span>Вернуться назад</span>
-            </a>
-            <div class="button pay-btn">
-              <span>Оплатить сейчас</span>
+                <span>Вернуться назад</span>
+              </a>
+              <div class="button pay-btn">
+                <span>Оплатить сейчас</span>
+              </div>
             </div>
-          </div>
-          </Link> 
+          </Link>
         </div>
       </div>
     </div>
