@@ -11,20 +11,20 @@ import Pagination from '../components/Pagination/Pagination';
 import { setCategoryId, setCurrentPage, setFilters, searchValue } from '../redux/Slices/filterSlice';
 import { fetchPizzas } from '../redux/Slices/PizzaSlice';
 
-function Home() {
+const Home:React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
 
-  const { categoryId, sort, currentPage } = useSelector((state) => state.filter);
-  const { items, status } = useSelector((state) => state.pizza);
+  const { categoryId, sort, currentPage } = useSelector((state:any) => state.filter);
+  const { items, status } = useSelector((state:any) => state.pizza);
 
-  const onChangeCategory = (id) => {
+  const onChangeCategory = (id: number) => {
     dispatch(setCategoryId(id));
   };
-  const onChangePage = (number) => {
-    dispatch(setCurrentPage(number));
+  const onChangePage = (page: number) => {
+    dispatch(setCurrentPage(page));
   };
   const getPizzas = async () => {
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
@@ -33,6 +33,7 @@ function Home() {
     const search = searchValue ? `&search=${searchValue}` : '';
 
     dispatch(
+      //@ts-ignore
       fetchPizzas({
         order,
         sortBy,
@@ -78,7 +79,7 @@ function Home() {
   }, [categoryId, sort.sortProperty, searchValue, currentPage]);
 
   const skeletons = [...new Array(8)].map((_, index) => <Skeleton key={index} />);
-  const pizzas = items.map((obj) => <Link key={obj.id} to={`/pizza/${obj.id}`} ><PizzaBlock  {...obj} /></Link> );
+  const pizzas = items.map((obj: any) => <Link key={obj.id} to={`/pizza/${obj.id}`} ><PizzaBlock  {...obj} /></Link> );
 
   return (
     <div className="container">
@@ -90,7 +91,7 @@ function Home() {
       {status === 'error' ? (
         <div>
           <h2>
-            Произошла ошибка <icon>😕</icon>
+            Произошла ошибка <span>😕</span>
           </h2>
           <p>
            Не удалось получить пиццы.
