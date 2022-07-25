@@ -25,7 +25,7 @@ const Search:React.FC = () => {
     [],
   );
 
-  const onChangeInput = (event: any) => {
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
     updateSearchValue(event.target.value);
   };
@@ -34,7 +34,7 @@ const Search:React.FC = () => {
       <img className={styles.icon} width="38" src={searchIcon} alt="search" />
       <input
         ref={inputRef}
-        value={value}
+        value={value} 
         onChange={onChangeInput}
         className={styles.input}
         placeholder="поиск пиццы..."
