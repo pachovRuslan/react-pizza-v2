@@ -1,5 +1,6 @@
 {
   "name": "pizza-react-v2",
+  "homepage": "https://pachovruslan.github.io/react-pizza-v2/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -26,12 +27,15 @@
     "sass": "^1.53.0",
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
+
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -55,3 +59,4 @@
     "@types/lodash.debounce": "^4.0.7"
   }
 }
+
