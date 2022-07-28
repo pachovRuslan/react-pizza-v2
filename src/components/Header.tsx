@@ -3,13 +3,21 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logogSvg from '../assets/img/pizza-logo.svg';
 import Search from './Search/Search';
-import { selectCart } from '../redux/Slices/cartSlice';
+import { selectCart } from '../redux/Slices/cart/selectors';
 
 function Header() {
   const { items, totalPrica } = useSelector(selectCart);
   const location = useLocation();
+  const totalCount = items.reduce((sum: number, item: any) => sum + item.count, 0);
+  const isMounted = React.useRef(false);
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const json = JSON.stringify(items);
+      localStorage.setItem('cart', json);
+    }
+    isMounted.current = true;
+  }, [items]);
 
-  const totalCount = items.reduce((sum: number , item: any) => sum + item.count, 0);
   return (
     <div className="header">
       <div className="container">

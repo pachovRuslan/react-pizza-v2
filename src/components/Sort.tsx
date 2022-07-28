@@ -1,6 +1,7 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectSort, setSort, SortPropertyEnum } from '../redux/Slices/filterSlice';
+import {  useDispatch } from 'react-redux';
+import {  setSort } from '../redux/Slices/filter/slice';
+import {  Sort, SortPropertyEnum } from '../redux/Slices/filter/types';
 
 type listItem = {
   name: string;
@@ -10,6 +11,9 @@ type listItem = {
 type PopupClick =  MouseEvent & {
   path: Node[]
 };
+type SortPopupProps = {
+  value: Sort
+};
 
 export const list: listItem[] = [
   { name: 'популярности', sortProperty: SortPropertyEnum.RATING },
@@ -18,9 +22,8 @@ export const list: listItem[] = [
   { name: 'алфавиту', sortProperty: SortPropertyEnum.TITLE },
 ];
 
-const SortPopup:React.FC = () => {
+const SortPopup:React.FC<SortPopupProps> = React.memo(({value}) => {
   const dispatch = useDispatch();
-  const sort = useSelector(selectSort);
   const sortRef = React.useRef<HTMLDivElement>(null);
 
   const [open, setOpen] = React.useState(false);
@@ -57,7 +60,7 @@ return () =>   document.body.removeEventListener('click', handleClickOutside);
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{sort.name}</span>
+        <span onClick={() => setOpen(!open)}>{value.name}</span>
       </div>
       {open && (
         <div className="sort__popup">
@@ -66,7 +69,7 @@ return () =>   document.body.removeEventListener('click', handleClickOutside);
               <li
                 key={i}
                 onClick={() => onClickSelect(obj)}
-                className={sort.sortProperty === obj.sortProperty ? 'active' : ''}>
+                className={value.sortProperty === obj.sortProperty ? 'active' : ''}>
                 {obj.name}
               </li>
             ))}
@@ -75,6 +78,6 @@ return () =>   document.body.removeEventListener('click', handleClickOutside);
       )}
     </div>
   );
-}
+} )
 
 export default SortPopup;

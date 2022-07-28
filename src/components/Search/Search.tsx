@@ -5,23 +5,23 @@ import searchIcon from '../../assets/img/search.svg';
 import clearIcon from '../../assets/img/close.svg';
 import debounce from 'lodash.debounce';
 import { useDispatch } from 'react-redux';
-import {setSearchValue} from '../../redux/Slices/filterSlice'
+import {setSearchValue} from '../../redux/Slices/filter/slice'
 
-const Search:React.FC = () => {
+export const Search: React.FC = () => {
   const dispatch = useDispatch();
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState<string>('');
   const inputRef = React.useRef<HTMLInputElement>(null);
-
 
   const onClickClear = () => {
     dispatch(setSearchValue(''));
     setValue('');
     inputRef.current?.focus();
   };
+
   const updateSearchValue = React.useCallback(
-    debounce((str) => {
+    debounce((str: string) => {
       dispatch(setSearchValue(str));
-    }, 150),
+    }, 10),
     [],
   );
 
@@ -30,6 +30,7 @@ const Search:React.FC = () => {
     updateSearchValue(event.target.value);
   };
   return (
+
     <div className={styles.root}>
       <img className={styles.icon} width="38" src={searchIcon} alt="search" />
       <input
@@ -50,6 +51,7 @@ const Search:React.FC = () => {
       )}
     </div>
   );
+
 }
 
 export default Search;

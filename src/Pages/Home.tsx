@@ -3,14 +3,15 @@ import React from 'react';
 import qs from 'qs';
 import { useSelector  } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import Categories from '../components/Categories';
-import Sort, { list } from '../components/Sort';
-import PizzaBlock from '../components/PiazzaBlock/PizzaBlock';
-import Skeleton from '../components/PiazzaBlock/Skeleton';
-import Pagination from '../components/Pagination/Pagination';
-import { setCategoryId, setCurrentPage, setFilters, selectFilter, FilterSliceState} from '../redux/Slices/filterSlice';
-import { fetchPizzas, SearchPizzasParams, selectPizzaData } from '../redux/Slices/PizzaSlice';
+
+import {Categories, Sort, PizzaBlock, Skeleton, Pagination} from '../components/';
+
+import { setCategoryId, setCurrentPage, setFilters, } from '../redux/Slices/filter/slice';
+import { fetchPizzas, SearchPizzasParams } from '../redux/Slices/pizza/slice';
+import {selectPizzaData } from '../redux/Slices/pizza/selectors';
+import {  selectFilter} from '../redux/Slices/filter/selectors';
 import { useAppDispatch } from '../redux/store';
+import { list } from '../components/Sort';
 
 const Home:React.FC = () => {
   const navigate = useNavigate();
@@ -22,9 +23,9 @@ const Home:React.FC = () => {
 
   const { items, status } = useSelector(selectPizzaData);
 
-  const onChangeCategory = (idx: number) => {
+  const onChangeCategory = React.useCallback((idx: number) => {
     dispatch(setCategoryId(idx));
-  };
+  },[])
   const onChangePage = (page: number) => {
     dispatch(setCurrentPage(page));
   };
@@ -70,7 +71,7 @@ const Home:React.FC = () => {
       isSearch.current = true;
     }
   }, []);
-
+ 
   React.useEffect(() => {
     window.scrollTo(0, 0);
     if (!isSearch.current) {
@@ -89,7 +90,7 @@ const Home:React.FC = () => {
     <div className="container">
       <div className="content__top">
         <Categories categoryId={categoryId} onChangeCategory={onChangeCategory} />
-        <Sort />
+        <Sort value={sort}/>
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === 'error' ? (
