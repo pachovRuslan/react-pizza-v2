@@ -1,18 +1,19 @@
-import React from 'react';
-import {  useDispatch } from 'react-redux';
-import {  setSort } from '../redux/Slices/filter/slice';
-import {  Sort, SortPropertyEnum } from '../redux/Slices/filter/types';
+import React from 'react'
+;
+import { useDispatch } from 'react-redux';
+import { setSort } from '../redux/Slices/filter/slice';
+import { Sort, SortPropertyEnum } from '../redux/Slices/filter/types';
 
 type listItem = {
   name: string;
-  sortProperty: SortPropertyEnum
+  sortProperty: SortPropertyEnum;
 };
 
-type PopupClick =  MouseEvent & {
-  path: Node[]
+type PopupClick = MouseEvent & {
+  path: Node[];
 };
 type SortPopupProps = {
-  value: Sort
+  value: Sort;
 };
 
 export const list: listItem[] = [
@@ -22,7 +23,7 @@ export const list: listItem[] = [
   { name: 'алфавиту', sortProperty: SortPropertyEnum.TITLE },
 ];
 
-const SortPopup:React.FC<SortPopupProps> = React.memo(({value}) => {
+const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
   const dispatch = useDispatch();
   const sortRef = React.useRef<HTMLDivElement>(null);
 
@@ -32,18 +33,18 @@ const SortPopup:React.FC<SortPopupProps> = React.memo(({value}) => {
     dispatch(setSort(obj));
     setOpen(false);
   };
-  
-  React.useEffect(()=> {
-    const handleClickOutside = (event: MouseEvent) =>{
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
       const _event = event as PopupClick;
-      if(sortRef.current && !_event.path.includes(sortRef.current)){
+      if (sortRef.current && !_event.path.includes(sortRef.current)) {
         setOpen(false);
       }
     };
 
-document.body.addEventListener('click', handleClickOutside);
-return () =>   document.body.removeEventListener('click', handleClickOutside);
-} , [])
+    document.body.addEventListener('click', handleClickOutside);
+    return () => document.body.removeEventListener('click', handleClickOutside);
+  }, []);
 
   return (
     <div ref={sortRef} className="sort">
@@ -78,6 +79,6 @@ return () =>   document.body.removeEventListener('click', handleClickOutside);
       )}
     </div>
   );
-} )
+});
 
 export default SortPopup;

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+
 import logogSvg from '../assets/img/pizza-logo.svg';
-import Search from './Search/Search';
+import {Search} from '../components';
+
+import { useSelector } from 'react-redux';
 import { selectCart } from '../redux/Slices/cart/selectors';
 
 function Header() {
